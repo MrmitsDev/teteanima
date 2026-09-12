@@ -11,7 +11,7 @@ const galleryButtons=[...document.querySelectorAll('[data-gallery]')],dialog=doc
 function showImage(index){activeIndex=(index+galleryButtons.length)%galleryButtons.length;const photo=galleryButtons[activeIndex].querySelector('img');largeImage.src=photo.src;largeImage.alt=photo.alt;document.querySelector('#lightbox-caption').textContent=photo.alt;document.querySelector('#lightbox-counter').textContent=`${activeIndex+1} / ${galleryButtons.length}`;}
 galleryButtons.forEach((button,index)=>button.addEventListener('click',()=>{galleryOpener=button;showImage(index);dialog.showModal();document.body.classList.add('modal-open');}));document.querySelector('#lightbox-close').addEventListener('click',()=>dialog.close());document.querySelector('#lightbox-prev').addEventListener('click',()=>showImage(activeIndex-1));document.querySelector('#lightbox-next').addEventListener('click',()=>showImage(activeIndex+1));dialog.addEventListener('close',()=>{document.body.classList.remove('modal-open');galleryOpener?.focus({preventScroll:true});});dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});dialog.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();showImage(activeIndex+1);}if(e.key==='ArrowLeft'){e.preventDefault();showImage(activeIndex-1);}});let touchX=0;largeImage.addEventListener('touchstart',e=>{touchX=e.changedTouches[0].clientX;},{passive:true});largeImage.addEventListener('touchend',e=>{const delta=e.changedTouches[0].clientX-touchX;if(Math.abs(delta)>50)showImage(activeIndex+(delta<0?1:-1));},{passive:true});
 document.querySelectorAll('[data-service]').forEach(link=>link.addEventListener('click',()=>{const checkbox=[...document.querySelectorAll('[name=services]')].find(input=>input.value===link.dataset.service);if(checkbox)checkbox.checked=true;}));document.querySelectorAll('[data-event]').forEach(link=>link.addEventListener('click',()=>{document.querySelector('#event').value=link.dataset.event;}));
-const form=document.querySelector('#orcamento'),status=document.querySelector('#form-status'),submitButton=form.querySelector('[type=submit]'),fallback=document.querySelector('#whatsapp-fallback'),today=new Date(),localDate=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;document.querySelector('#date').min=localDate;document.querySelector('#year').textContent=today.getFullYear();
+const form=document.querySelector('#orcamento'),status=document.querySelector('#form-status'),submitButton=form.querySelector('[type=submit]'),fallback=document.querySelector('#whatsapp-fallback'),today=new Date(),localDate=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;document.querySelector('#date').min=localDate;
 function clearError(input){input.removeAttribute('aria-invalid');input.removeAttribute('aria-describedby');input.closest('.field')?.querySelector('.field-error')?.remove();}
 submitButton.disabled=false;
 function fieldError(input,message){input.setAttribute('aria-invalid','true');const error=document.createElement('span');error.className='field-error';error.id=`${input.id}-error`;error.textContent=message;input.setAttribute('aria-describedby',error.id);input.parentElement.append(error);}
@@ -42,8 +42,28 @@ if(document.modelContext?.registerTool){
  window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
 }
 
-if('IntersectionObserver' in window){
- const floatingContact=document.querySelector('.whatsapp-float');
- new IntersectionObserver(entries=>{const visible=entries.some(entry=>entry.isIntersecting);floatingContact.classList.toggle('is-hidden',visible);floatingContact.tabIndex=visible?-1:0;floatingContact.setAttribute('aria-hidden',String(visible));},{threshold:0}).observe(form);
+// Leave text and controls unobstructed by the floating contact on small screens.
+const floatingContact=document.querySelector('.whatsapp-float');
+const contactObstacles=[...document.querySelectorAll('.hero-copy,.trust-grid>div,.service,.mini-service,.gallery-item,.event-row,.process-grid li,.review-card,.cta-panel,.contact-line,.footer-grid a,.footer-bottom,main h2,main .eyebrow')];
+let formVisible=false,contactFrame=0;
+function updateFloatingContact(){
+ contactFrame=0;
+ const button=floatingContact.getBoundingClientRect();
+ const obscuresContent=window.matchMedia('(max-width:760px)').matches&&contactObstacles.some(el=>{
+  const rect=el.getBoundingClientRect();
+  return rect.width>0&&rect.bottom>button.top-8&&rect.top<button.bottom+8&&rect.right>button.left-8&&rect.left<button.right+8;
+ });
+ const hidden=formVisible||obscuresContent||document.body.classList.contains('modal-open')||document.body.classList.contains('menu-open');
+ floatingContact.classList.toggle('is-hidden',hidden);
+ floatingContact.tabIndex=hidden?-1:0;
+ floatingContact.setAttribute('aria-hidden',String(hidden));
 }
-
+function scheduleFloatingContact(){if(!contactFrame)contactFrame=requestAnimationFrame(updateFloatingContact);}
+window.addEventListener('scroll',scheduleFloatingContact,{passive:true});
+window.addEventListener('resize',scheduleFloatingContact);
+new MutationObserver(scheduleFloatingContact).observe(document.body,{attributes:true,attributeFilter:['class']});
+if('IntersectionObserver' in window){
+ new IntersectionObserver(entries=>{formVisible=entries.some(entry=>entry.isIntersecting);scheduleFloatingContact();},{threshold:0}).observe(form);
+}
+window.addEventListener('load',scheduleFloatingContact,{once:true});
+scheduleFloatingContact();

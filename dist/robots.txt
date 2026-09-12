@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://teteanima-festas.brainy-lion-4896.chatgpt.site/sitemap.xml
+Sitemap: https://teteanima-festas.mito1233712.chatgpt.site/sitemap.xml
+

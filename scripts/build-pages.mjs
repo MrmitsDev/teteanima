@@ -30,6 +30,12 @@ const html = originalHtml.replaceAll(previousOrigin, origin);
 if (html.slice(html.indexOf('<body>')) !== originalHtml.slice(originalHtml.indexOf('<body>'))) {
   throw new Error('The build must not change visible application content.');
 }
+// Prevent platform-dependent emoji decorations and outdated footer copy from shipping.
+if (/[\u2733\u2747]/u.test(html)) throw new Error('Decorative sparks must use SVG, not Unicode emoji.');
+const demoFooter = 'Demonstração de website criada para apresentação à TeteAnima.';
+if (html.split(demoFooter).length !== 2 || /Todos os direitos reservados/i.test(html)) {
+  throw new Error('The presentation site must contain only the demonstration footer.');
+}
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]));
 for (const [, ref] of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
   if (ref.startsWith('#')) {

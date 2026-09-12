@@ -13,3 +13,5 @@ Imagens extraídas dos recursos efetivamente carregados na galeria pública, sem
 | team.webp | https://cdn0.casamentos.pt/vendor/2580/3_2/960/jpg/1_6_112580.webp |
 
 Fontes: Outfit e DM Sans, distribuídas pelo Google Fonts. O site serve localmente os ficheiros WOFF2 das famílias. Fotografias e avaliações pertencem aos respetivos titulares.
+
+Opiniões verificadas novamente por consulta direta no navegador em 12 de setembro de 2026: o perfil apresenta 4 opiniões e classificação global 5,0. A opinião mais recente é de Fabi, enviada em 04/09/2026; as outras são de Cátia (05/03/2023), Sandra (23/07/2019) e João (05/10/2017). O site apresenta três excertos, mas o total indicado refere-se às quatro opiniões da fonte.

@@ -38,3 +38,9 @@
 .whatsapp-float.is-hidden{transform:none}
 @media(min-width:1600px){.hero-copy{max-width:820px}}
 @media(min-width:761px){.service-content p{padding-right:46px}}
+
+/* Vector decoration keeps the brand colour on iOS as well as desktop. */
+.decorative-spark{display:inline-block;width:1em;height:1em;vertical-align:middle;overflow:visible}
+.wordmark i{display:inline-flex;align-items:center}
+.hero-note>span{display:flex;align-items:center;justify-content:center}
+.cta-spark{display:flex;pointer-events:none}

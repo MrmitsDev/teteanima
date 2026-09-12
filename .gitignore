@@ -3,3 +3,18 @@ node_modules/
 *.tar.gz
 *.log
 qa/
+
+# Local secrets and tool credentials
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+.wrangler/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Generated Cloudflare Pages output (dist/ remains the source)
+/build/

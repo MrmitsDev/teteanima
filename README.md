@@ -2,6 +2,12 @@
 
 Site estático em Português de Portugal, sem dependências de execução. Os ficheiros publicados encontram-se em `dist/`. A pré-visualização local pode ser iniciada com `node serve.mjs`.
 
+## Cloudflare Pages
+
+Preparação: `node scripts/build-pages.mjs`. Output para publicação: `build/`. Não há package manager nem instalação de dependências. O build preserva a aplicação original em `dist/` e adapta apenas as referências de domínio no SEO da cópia publicada. Node 22 está definido em `.node-version`.
+
+O passo a passo, configuração de GitHub, campos do painel e verificações de produção estão em [CLOUDFLARE-PAGES.md](CLOUDFLARE-PAGES.md). O projeto ainda precisa de ser conectado às contas GitHub e Cloudflare; esta preparação não significa que o deploy Pages foi realizado.
+
 ## Orçamentos
 
 O formulário valida os campos e prepara uma mensagem para o WhatsApp +351 917 314 350. O visitante revê e envia a mensagem no WhatsApp. Não há envio automático, armazenamento de contactos, backend de correio, preços nem disponibilidade presumida. O botão fica desativado se JavaScript não estiver disponível; os contactos diretos continuam acessíveis.

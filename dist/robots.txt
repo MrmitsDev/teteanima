@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://teteanima-festas.brainy-lion-4896.chatgpt.site/sitemap.xml
